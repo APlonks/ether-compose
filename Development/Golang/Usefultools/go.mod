@@ -2,7 +2,10 @@ module tools
 
 go 1.21.6
 
-require github.com/ethereum/go-ethereum v1.13.11
+require (
+	github.com/ethereum/go-ethereum v1.13.11
+	golang.org/x/crypto v0.17.0
+)
 
 require (
 	github.com/Microsoft/go-winio v0.6.1 // indirect
@@ -23,7 +26,6 @@ require (
 	github.com/supranational/blst v0.3.11 // indirect
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
 	github.com/tklauser/numcpus v0.6.1 // indirect
-	golang.org/x/crypto v0.17.0 // indirect
 	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"tools/functions"
+	"tools/simulation"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -20,6 +21,7 @@ func main() {
 		rich_account_priv_key string
 		richPrivKey           *ecdsa.PrivateKey
 		richPubKey            common.Address
+		wallets               []simulation.Wallet
 	)
 
 	http_endpoint = "http://localhost:8545"
@@ -31,9 +33,7 @@ func main() {
 	}
 
 	client, err = ethclient.Dial(http_endpoint)
-	if err != nil {
-		log.Fatal(err)
-	}
+	functions.ErrManagement(err)
 
 	for {
 		fmt.Println("Choose what do u want to do:")
@@ -41,6 +41,7 @@ func main() {
 		fmt.Println("2: Retrieve information header about a block")
 		fmt.Println("3: Retrieve compete information about a block")
 		fmt.Println("4: Send Ethers from a rich account to an account")
+		fmt.Println("5: Create Life Simulation")
 
 		fmt.Println()
 		fmt.Scanf("%d", &choice)
@@ -57,11 +58,19 @@ func main() {
 		case 4:
 			fmt.Println("Send Ethers from a rich account to an account")
 			functions.SendEthers(client, richPrivKey, richPubKey)
+		case 5:
+			fmt.Println("Create Life Simulation")
+			numWallets := 3 // Add it to conf file
+			wallets = simulation.CreateWallets(numWallets)
+			for _, wallet := range wallets {
+				fmt.Println("Public key:", wallet.AddressHex, "; Private key:", wallet.KeyHex)
+			}
+			nbEthers := 10 // Add it to conf file
+			simulation.SendEthers(client, richPrivKey, richPubKey, wallets, nbEthers)
 		default:
-			fmt.Println("Functions not implemented")
+			fmt.Println("Function not implemented")
 
 		}
-		// functions.Blockheader(client)
 	}
 
 }
