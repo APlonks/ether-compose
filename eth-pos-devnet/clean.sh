@@ -39,7 +39,8 @@ function DisplayHelp
 function Delete
 {
     # Delete docker compose and volumes for blockchain
-    docker compose down
+    docker compose --profile pos down
+    docker compose --profile poa down
     rm -Rf ./consensus/beacondata ./consensus/validatordata ./consensus/genesis.ssz
     rm -Rf ./execution/geth
 }

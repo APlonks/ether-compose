@@ -28,7 +28,14 @@ Software:
 git clone https://github.com/aplonks/Ethercompose.git && cd Ethercompose/eth-pos-devnet
 # Configure the .env file by adding the IP of your device/virtual machine
 sudo ./clean.sh
-docker compose up -d
+```
+Then run Private Ethereum Blockchain using POS (Proof of Stake) as consensus algorithm
+```
+docker compose up --profile pos -d # for pos
+```
+or run Private Ethereum Blockchain using POA (Proof of Authority) as consensus algorithm
+```
+docker compose up --profile pos -d # for pos
 ```
 
 You will see the following:
@@ -110,7 +117,7 @@ sudo ./clean.sh -f
 |8551|Authentication port for the consensus client|
 |6060|Metrics Port|
 
-### Ethereum consensus client : **Prysm**
+### Ethereum consensus client : **Prysm** (exists only in POS)
 ref : https://docs.prylabs.network/docs/prysm-usage/p2p-host-ip
 |Ports|Process|
 |:--|:--|
@@ -118,7 +125,7 @@ ref : https://docs.prylabs.network/docs/prysm-usage/p2p-host-ip
 |3500|JSON-RPC for API|
 
 
-### Ethereum consensus client : **Validator**
+### Ethereum consensus client : **Validator** (exists only in POS)
 |Ports|Process|
 |:--|:--|
 
