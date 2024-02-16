@@ -35,7 +35,7 @@ docker compose up --profile pos -d # for pos
 ```
 or run Private Ethereum Blockchain using POA (Proof of Authority) as consensus algorithm
 ```
-docker compose up --profile pos -d # for pos
+docker compose up --profile poa -d # for poa
 ```
 
 You will see the following:
