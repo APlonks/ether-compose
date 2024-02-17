@@ -45,6 +45,8 @@ Solidity
 - https://solidity-fr.readthedocs.io/fr/v0.8.12/introduction-to-smart-contracts.html (
 not up to date)
 
+Remix IDE:
+https://remix-ide.readthedocs.io/en/latest/run.html#run-setup
 
 # To see
 
