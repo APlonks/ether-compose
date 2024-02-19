@@ -21,6 +21,7 @@ Materials:
 
 Software:
 - Install Docker
+https://docs.docker.com/engine/install/ubuntu/
 
 ### Installation
 
@@ -38,10 +39,16 @@ or run Private Ethereum Blockchain using POA (Proof of Authority) as consensus a
 docker compose --profile poa up -d # for poa
 ```
 
+You can also add Prometheus and grafana.
+```
+docker compose --profile poa --profile metrics up -d # for poa
+```
+The configuration can be found further in this documentation
+
 You will see the following:
 
 ```
-$ docker compose up -d
+$ docker compose --profile pos up -d
 [+] Running 11/15
  ⠸ Network bcnetwork                                                     Created          2.3s
  ⠸ Volume "eth-pos-devnet_portainer_data"                                Created          2.3s
@@ -144,11 +151,6 @@ ref : https://docs.prylabs.network/docs/prysm-usage/p2p-host-ip
 |Ports|Process|
 |:--|:--|
 |3000|WebServer|
-
-### Containers Manager : **Portainer**
-|Ports|Process|
-|:--|:--|
-|8000|WebServer|
 
 ### Containers/process visualisation : **weaveworks**
 |Ports|Process|

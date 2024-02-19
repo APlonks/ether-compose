@@ -215,60 +215,35 @@ services:
     networks: 
       - bcnetwork
 
-  # remix-ide:
-  #   container_name: remix-ide
-  #   image: docker.io/remixproject/remix-ide
-  #   ports: 
-  #     - 8080:80
-  #     - 65520:65520
-  #   # volumes:
-  #   #   - ../Development/SmartContracts/:/app
-  #   networks:
-  #     - bcnetwork
-
-  # prometheus:
-  #   image: prom/prometheus
-  #   command:
-  #     - '--config.file=/etc/prometheus/prometheus.yml'
-  #   ports:
-  #     - 9090:9090
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-  #     - prom_data:/prometheus
-  #   networks: 
-  #     - bcnetwork
+  prometheus:
+    image: prom/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prom_data:/prometheus
+    networks: 
+      - bcnetwork
+    profiles: [metrics]
   
-  # grafana:
-  #   image: grafana/grafana
-  #   ports:
-  #     - 3000:3000
-  #   restart: unless-stopped
-  #   environment:
-  #     - GF_SECURITY_ADMIN_USER=${APP_USERNAME}
-  #     - GF_SECURITY_ADMIN_PASSWORD=${APP_PASSWORD}
-  #   user: "0"
-  #   volumes:
-  #   - grafana_storage:/var/lib/grafana
-  #   - ./grafana/:/etc/grafana/provisioning
-  #   networks: 
-  #     - bcnetwork
-
-  # portainer:
-  #   image: portainer/portainer-ce:latest
-  #   ports:
-  #     - 8000:8000
-  #     - 9443:9443
-  #   restart: unless-stopped
-  #   environment:
-  #     - GF_SECURITY_ADMIN_USER=${APP_USERNAME}
-  #     - GF_SECURITY_ADMIN_PASSWORD=${APP_PASSWORD}
-  #   user: "0"
-  #   volumes:
-  #   - /var/run/docker.sock:/var/run/docker.sock
-  #   - portainer_data:/data
-  #   networks: 
-  #     - bcnetwork
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=${APP_USERNAME}
+      - GF_SECURITY_ADMIN_PASSWORD=${APP_PASSWORD}
+    user: "0"
+    volumes:
+    - grafana_storage:/var/lib/grafana
+    - ./grafana/:/etc/grafana/provisioning
+    networks: 
+      - bcnetwork
+    profiles: [metrics]
 
   # # https://www.weave.works/docs/scope/latest/installing/#docker
   # weavescope:
@@ -288,7 +263,6 @@ services:
 volumes:
   prom_data:
   grafana_storage:
-  portainer_data:
 
 networks:
   bcnetwork:
