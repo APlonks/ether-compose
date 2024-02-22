@@ -1,0 +1,5 @@
+eth-pos-devnet/consensus/beacondata
+eth-pos-devnet/consensus/genesis.ssz
+eth-pos-devnet/consensus/validatordata
+eth-pos-devnet/execution/geth
+eth-pos-devnet/execution/geth.ipc
