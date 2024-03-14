@@ -30,10 +30,17 @@ git clone https://github.com/aplonks/Ethercompose.git && cd Ethercompose/eth-pos
 # Configure the .env file by adding the IP of your device/virtual machine
 sudo ./clean.sh
 ```
+
+Create blockchain network called bcnetwork
+```
+docker network create --driver bridge bcnetwork
+```
+
 Then run Private Ethereum Blockchain using POS (Proof of Stake) as consensus algorithm
 ```
 docker compose --profile pos up -d # for pos
 ```
+
 or run Private Ethereum Blockchain using POA (Proof of Authority) as consensus algorithm
 ```
 docker compose --profile poa up -d # for poa
@@ -43,6 +50,7 @@ You can also add Prometheus and grafana.
 ```
 docker compose --profile poa --profile metrics up -d # for poa
 ```
+
 The configuration can be found further in this documentation
 
 You will see the following:

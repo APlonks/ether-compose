@@ -86,10 +86,11 @@ services:
     image: "docker.io/ethereum/client-go:v1.13.13"
     command:
       - --http
-      - --http.api=admin,debug,engine,eth,miner,net,rpc,txpool,web3
       - --http.addr=0.0.0.0
+      - --http.api=admin,debug,engine,eth,miner,net,rpc,txpool,web3
       - --http.corsdomain=*
       - --http.port=8545
+      - --http.vhosts=*
       - --ws
       - --ws.api=admin,debug,engine,eth,miner,net,rpc,txpool,web3
       - --ws.addr=0.0.0.0
@@ -165,10 +166,11 @@ services:
     image: "docker.io/ethereum/client-go:v1.13.13"
     command:
       - --http
-      - --http.api=admin,clique,debug,engine,eth,miner,net,rpc,txpool,web3
       - --http.addr=0.0.0.0
+      - --http.api=admin,clique,debug,engine,eth,miner,net,rpc,txpool,web3
       - --http.corsdomain=*
       - --http.port=8545
+      - --http.vhosts=*
       - --ws
       - --ws.api=admin,clique,debug,engine,eth,miner,net,rpc,txpool,web3
       - --ws.addr=0.0.0.0
@@ -267,3 +269,4 @@ networks:
   bcnetwork:
     name: bcnetwork
     driver: bridge
+    external: true
