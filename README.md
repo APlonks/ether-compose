@@ -26,12 +26,12 @@ https://docs.docker.com/engine/install/ubuntu/
 ### Installation
 
 ```
-git clone https://github.com/aplonks/Ethercompose.git && cd Ethercompose/eth-pos-devnet
+git clone https://github.com/APlonks/ether-compose.git && cd ether-compose
 # Configure the .env file by adding the IP of your device/virtual machine
 sudo ./clean.sh
 ```
 
-Create blockchain network called bcnetwork
+Create blockchain network called bcnetwork if it doesn't exist
 ```
 docker network create --driver bridge bcnetwork
 ```
