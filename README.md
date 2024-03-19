@@ -21,7 +21,7 @@ Materials:
 
 Software:
 - Install Docker (recommended version 25.0.0 or higher)
-https://docs.docker.com/engine/install/ubuntu/
+[Install Docker Engine](https://docs.docker.com/engine/install/)
 
 ### Installation
 
