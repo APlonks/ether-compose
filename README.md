@@ -13,14 +13,14 @@ The development net is fully functional and allows for the deployment of smart c
 
 ## Installation Blockchain
 
-### Minimum prerequisites : 
+### Minimum prerequisites:
 
 Materials:
-- 2 CPU
-- 4G MEMORY
+- 2 CPU cores
+- 4 Go RAM
 
 Software:
-- Install Docker
+- Install Docker (recommended version 25.0.0 or higher)
 https://docs.docker.com/engine/install/ubuntu/
 
 ### Installation
@@ -31,17 +31,17 @@ git clone https://github.com/APlonks/ether-compose.git && cd ether-compose
 sudo ./clean.sh
 ```
 
-Create blockchain network called bcnetwork if it doesn't exist
+Create blockchain network called bcnetwork if it doesn't exist.
 ```
 docker network create --driver bridge bcnetwork
 ```
 
-Then run Private Ethereum Blockchain using POS (Proof of Stake) as consensus algorithm
+Then run Private Ethereum Blockchain using POS (Proof of Stake) as consensus algorithm.
 ```
 docker compose --profile pos up -d # for pos
 ```
 
-or run Private Ethereum Blockchain using POA (Proof of Authority) as consensus algorithm
+or run Private Ethereum Blockchain using POA (Proof of Authority) as consensus algorithm.
 ```
 docker compose --profile poa up -d # for poa
 ```
@@ -51,7 +51,7 @@ You can also add Prometheus and grafana.
 docker compose --profile poa --profile metrics up -d # for poa
 ```
 
-The configuration can be found further in this documentation
+The configuration can be found further in this documentation.
 
 You will see the following:
 
@@ -97,7 +97,7 @@ INFO [08-19|00:44:42.747] Chain head was updated                   number=53 has
 ```
 
 ### Configure Prometheus & Grafana
-- Prometheus Grafana configuration : 
+- Prometheus Grafana configuration: 
 https://grafana.com/grafana/dashboards/18463-go-ethereum-by-instance/
 - Import data dashboard template in grafana : https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/import-dashboards/
 
@@ -124,7 +124,7 @@ sudo ./clean.sh -f
 
 # Listening Ports
 
-### Ethereum execution client go : **GETH**
+### Ethereum execution client go: **GETH**
 |Ports|Process|
 |:--|:--|
 |8545|HTTP endpoint|
@@ -132,7 +132,7 @@ sudo ./clean.sh -f
 |8551|Authentication port for the consensus client|
 |6060|Metrics Port|
 
-### Ethereum consensus client : **Prysm** (exists only in POS)
+### Ethereum consensus client: **Prysm** (exists only in POS)
 ref : https://docs.prylabs.network/docs/prysm-usage/p2p-host-ip
 |Ports|Process|
 |:--|:--|
@@ -140,27 +140,27 @@ ref : https://docs.prylabs.network/docs/prysm-usage/p2p-host-ip
 |3500|JSON-RPC for API|
 
 
-### Ethereum consensus client : **Validator** (exists only in POS)
+### Ethereum consensus client: **Validator** (exists only in POS)
 |Ports|Process|
 |:--|:--|
 
 
-### Block explorer : **Ethereum lite-explorer**
+### Block explorer: **Ethereum lite-explorer**
 |Ports|Process|
 |:--|:--|
 |8081|Web Server|
 
-### Metrcis Collector : **Prometheus**
+### Metrcis Collector: **Prometheus**
 |Ports|Process|
 |:--|:--|
 |9090|WebServer & endpoint for grafana|
 
-### Graph & Stats on metrics : **Grafana**
+### Graph & Stats on metrics: **Grafana**
 |Ports|Process|
 |:--|:--|
 |3000|WebServer|
 
-### Containers/process visualisation : **weaveworks**
+### Containers/process visualisation: **weaveworks**
 |Ports|Process|
 |:--|:--|
 |4040|WebServer|
