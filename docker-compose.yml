@@ -1,4 +1,4 @@
-version: "3.9"
+# version: "3.9"
 services:
   #Creates a genesis state for the beacon chain using a YAML configuration file and
   # a deterministic set of 64 validators.
@@ -9,6 +9,7 @@ services:
       - generate-genesis
       # - --fork=capella
       - --fork=deneb
+      # - --fork=dencun
       - --num-validators=64
       - --output-ssz=/consensus/genesis.ssz
       - --chain-config-file=/consensus/config.yml
@@ -24,7 +25,7 @@ services:
   # Sets up the genesis configuration for the go-ethereum client from a JSON file.
   geth-genesis-pos:
     container_name: geth-genesis-pos
-    image: "docker.io/ethereum/client-go:v1.13.13"
+    image: "docker.io/ethereum/client-go:v1.14.11"
     command: --datadir=/execution init /execution/genesis.json
     volumes:
       - ./execution:/execution
@@ -61,7 +62,7 @@ services:
       - --jwt-secret=/execution/jwtsecret
       - --suggested-fee-recipient=0x123463a4b065722e99115d6c222f267d9cabb524
       - --minimum-peers-per-subnet=0
-      - --enable-debug-rpc-endpoints
+      # - --enable-debug-rpc-endpoints
     depends_on:
       create-beacon-chain-genesis:
         condition: service_completed_successfully
@@ -83,7 +84,7 @@ services:
   # APIs to allow for proof-of-stake consensus via Prysm.
   geth-pos:
     container_name: geth
-    image: "docker.io/ethereum/client-go:v1.13.13"
+    image: "docker.io/ethereum/client-go:v1.14.11"
     command:
       - --http
       - --http.addr=0.0.0.0
