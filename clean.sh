@@ -19,7 +19,6 @@ function OptionsAnalyze
         shift
         case $OPTION in
             -h | --help) optionProcessed=1 && DisplayHelp && TerminateScript;;
-            -f | --force) optionProcessed=1 && DeleteAll;;
             *) echo "Unknown option: $OPTION, please do --help for availables options"; TerminateScript;;
         esac
     done
@@ -32,27 +31,17 @@ function OptionsAnalyze
 function DisplayHelp
 {
     echo "-h | --help ........ To obtain some help about the script"
-    echo "-f | --force ....... To force the suppression of all volumes (directories which store data)"
 }
 
 
 function Delete
 {
     # Delete docker compose and volumes for blockchain
-    docker compose --profile pos down
-    docker compose --profile poa down
-    docker compose --profile metrics down
+    docker compose --profile explorer --profile ether-faucet down
     rm -Rf ./consensus/beacondata ./consensus/validatordata ./consensus/genesis.ssz
     rm -Rf ./execution/geth
 }
 
-function DeleteAll 
-{
-    echo "Delete volumes for Prometheus and Grafana and Portainer "
-    docker compose down -v
-    rm -Rf ./consensus/beacondata ./consensus/validatordata ./consensus/genesis.ssz
-    rm -Rf ./execution/geth
-}
 
 function TerminateScript
 {

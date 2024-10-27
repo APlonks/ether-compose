@@ -3,13 +3,12 @@ services:
   #Creates a genesis state for the beacon chain using a YAML configuration file and
   # a deterministic set of 64 validators.
   create-beacon-chain-genesis:
-    image: "gcr.io/prysmaticlabs/prysm/cmd/prysmctl:local-devnet"
+    image: "gcr.io/prysmaticlabs/prysm/cmd/prysmctl:latest"
     command:
       - testnet
       - generate-genesis
-      # - --fork=capella
+      # - --fork=electra
       - --fork=deneb
-      # - --fork=dencun
       - --num-validators=64
       - --output-ssz=/consensus/genesis.ssz
       - --chain-config-file=/consensus/config.yml
@@ -20,7 +19,7 @@ services:
       - ./execution:/execution
     networks: 
       - bcnetwork
-    profiles: [pos]
+
 
   # Sets up the genesis configuration for the go-ethereum client from a JSON file.
   geth-genesis-pos:
@@ -35,14 +34,14 @@ services:
         condition: service_completed_successfully
     networks: 
       - bcnetwork
-    profiles: [pos]
+
 
   # Runs a Prysm beacon chain from a specified genesis state created in the previous step
   # and connects to go-ethereum in the same network as the execution client.
   # The account used in go-ethereum is set as the suggested fee recipient for transactions
   # proposed via the validators attached to the beacon node.
   beacon-chain:
-    image: "docker.io/prysmaticlabs/prysm-beacon-chain:v5.0.0"
+    image: "gcr.io/prysmaticlabs/prysm/beacon-chain:v5.1.2"
     command:
       - --datadir=/consensus/beacondata
       # No peers to sync with in this testnet, so setting to 0
@@ -52,8 +51,8 @@ services:
       - --interop-eth1data-votes
       # The chain configuration file used for setting up Prysm
       - --chain-config-file=/consensus/config.yml
-      # We specify the chain id used by our execution client
       - --contract-deployment-block=0
+      # We specify the chain id used by our execution client
       - --chain-id=${CHAIN_ID:-32382}
       - --rpc-host=0.0.0.0
       - --grpc-gateway-host=0.0.0.0
@@ -78,7 +77,7 @@ services:
       - ./execution/jwtsecret:/execution/jwtsecret
     networks: 
       - bcnetwork
-    profiles: [pos]
+
 
   # Runs the go-ethereum execution client with the specified, unlocked account and necessary
   # APIs to allow for proof-of-stake consensus via Prysm.
@@ -127,12 +126,12 @@ services:
       - ./execution/geth_password.txt:/execution/geth_password.txt
     networks: 
       - bcnetwork
-    profiles: [pos]
+
 
   # We run a validator client with 64, deterministically-generated keys that match
   # The validator keys present in the beacon chain genesis state generated a few steps above.
   validator:
-    image: "docker.io/prysmaticlabs/prysm-validator:v5.0.0"
+    image: "gcr.io/prysmaticlabs/prysm/validator:v5.1.2"
     command:
       - --beacon-rpc-provider=beacon-chain:4000
       - --datadir=/consensus/validatordata
@@ -147,67 +146,9 @@ services:
       - ./consensus:/consensus
     networks: 
       - bcnetwork
-    profiles: [pos]
 
-  geth-genesis-poa:
-    container_name: geth-genesis-poa
-    image: "docker.io/ethereum/client-go:v1.13.13"
-    command: --datadir=/execution init /execution/genesis-poa.json
-    volumes:
-      - ./execution:/execution
-      - ./execution/genesis-poa.json:/execution/genesis-poa.json
-    networks: 
-      - bcnetwork
-    profiles: [poa]
 
-  # Runs the go-ethereum execution client with the specified, unlocked account and necessary
-  # APIs to allow for proof-of-stake consensus via Prysm.
-  geth-poa:
-    container_name: geth
-    image: "docker.io/ethereum/client-go:v1.13.13"
-    command:
-      - --http
-      - --http.addr=0.0.0.0
-      - --http.api=admin,clique,debug,engine,eth,miner,net,rpc,txpool,web3
-      - --http.corsdomain=*
-      - --http.port=8545
-      - --http.vhosts=*
-      - --ws
-      - --ws.api=admin,clique,debug,engine,eth,miner,net,rpc,txpool,web3
-      - --ws.addr=0.0.0.0
-      - --ws.port=8546
-      - --ws.origins=*
-      - --authrpc.vhosts=*
-      - --authrpc.addr=0.0.0.0
-      - --authrpc.port=8551
-      - --datadir=/execution
-      - --allow-insecure-unlock
-      - --unlock=0x123463a4b065722e99115d6c222f267d9cabb524
-      - --password=/execution/geth_password.txt
-      - --nodiscover
-      - --syncmode=full
-      - --metrics
-      - --metrics.addr=geth
-      - --metrics.port=6060
-      - --metrics.expensive
-      - --mine
-      - --miner.etherbase=0x123463a4b065722e99115d6c222f267d9cabb524
-    ports:
-      - 8545:8545
-      - 8546:8546
-      - 8551:8551
-      - 6060:6060
-    depends_on:
-      geth-genesis-poa:
-        condition: service_completed_successfully
-    volumes:
-      - ./execution:/execution
-      - ./execution/jwtsecret:/execution/jwtsecret
-      - ./execution/geth_password.txt:/execution/geth_password.txt
-    networks: 
-      - bcnetwork
-    profiles: [poa]
-
+  # Ethereum Lite Explorer by Alethio : https://github.com/Alethio/ethereum-lite-explorer
   lite-explorer:
     image: alethio/ethereum-lite-explorer
     ports:
@@ -216,55 +157,41 @@ services:
       - APP_NODE_URL=http://${IP_SERVER}:8545
     networks: 
       - bcnetwork
+    profiles: [explorer]
 
-  prometheus:
-    image: docker.io/prom/prometheus:v2.50.1
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-    ports:
-      - 9090:9090
-    restart: unless-stopped
-    volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prom_data:/prometheus
+
+  # ether-faucet by APlonks : https://github.com/APlonks/ether-faucet/tree/main
+  ether-faucet-frontend:
+    container_name: ether-faucet-frontend
+    image: ghcr.io/aplonks/ether-faucet-frontend:main
+    ports: 
+      - 5001:80
+    env_file:
+      - .env
     networks: 
       - bcnetwork
-    profiles: [metrics]
-  
-  grafana:
-    image: docker.io/grafana/grafana:10.2.4
-    ports:
-      - 3000:3000
-    restart: unless-stopped
-    environment:
-      - GF_SECURITY_ADMIN_USER=${APP_USERNAME}
-      - GF_SECURITY_ADMIN_PASSWORD=${APP_PASSWORD}
-    user: "0"
-    volumes:
-    - grafana_storage:/var/lib/grafana
-    - ./grafana/:/etc/grafana/provisioning
+    profiles: [ether-faucet]
+
+  ether-faucet-backend:
+    container_name: ether-faucet-backend
+    image: ghcr.io/aplonks/ether-faucet-backend:main
+    ports: 
+      - 5002:5002
+    env_file:
+      - .env
     networks: 
       - bcnetwork
-    profiles: [metrics]
+    profiles: [ether-faucet]
 
-  # # https://www.weave.works/docs/scope/latest/installing/#docker
-  # weavescope:
-  #   image: weaveworks/scope:1.13.2
-  #   network_mode: "host"
-  #   pid: "host"
-  #   privileged: true
-  #   ports:
-  #     - "4040:4040"
-  #   labels:
-  #     - "works.weave.role=system"
-  #   volumes:
-  #     - "/var/run/docker.sock:/var/run/docker.sock:rw"
-  #   command:
-  #     - "--probe.docker=true"
-
-volumes:
-  prom_data:
-  grafana_storage:
+  redis-stack:
+    container_name: redis-stack
+    image: docker.io/redis/redis-stack:7.2.0-v9
+    ports:
+      - "8001:8001"
+      - "6379:6379"
+    networks:
+      - bcnetwork
+    profiles: [ether-faucet]
 
 networks:
   bcnetwork:

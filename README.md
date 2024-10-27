@@ -20,14 +20,25 @@ Materials:
 - 4 Go RAM
 
 Software:
-- Install Docker (recommended version 25.0.0 or higher)
-[Install Docker Engine](https://docs.docker.com/engine/install/)
+- Install Docker (recommended version latest) : [Install Docker Engine](https://docs.docker.com/engine/install/)
 
 ### Installation
 
+Clone the project
 ```
 git clone https://github.com/APlonks/ether-compose.git && cd ether-compose
-# Configure the .env file by adding the IP of your device/virtual machine
+```
+
+Configure the .env file by adding the IP of your device/virtual machine.
+This adress will be used by the explorer to access 
+```
+IP_SERVER=<server_ip>
+# Example :
+# IP_SERVER=192.168.1.45
+```
+
+Clean your environnement
+```
 sudo ./clean.sh
 ```
 
@@ -38,41 +49,33 @@ docker network create --driver bridge bcnetwork
 
 Then run Private Ethereum Blockchain using POS (Proof of Stake) as consensus algorithm.
 ```
-docker compose --profile pos up -d # for pos
+docker compose up -d
 ```
 
-or run Private Ethereum Blockchain using POA (Proof of Authority) as consensus algorithm.
+You can add profile : 
+- explorer : to deploy [Ethereum Lite Explorer by Alethio](https://github.com/Alethio/ethereum-lite-explorer)
+- ether-faucet : to deploy [ether-faucet by APlonks](https://github.com/APlonks/ether-faucet)
 ```
-docker compose --profile poa up -d # for poa
+docker compose --profile explorer --profile ether-faucet up -d
 ```
 
-You can also add Prometheus and grafana.
-```
-docker compose --profile poa --profile metrics up -d # for poa
-```
 
 The configuration can be found further in this documentation.
 
 You will see the following:
 
-```
-$ docker compose --profile pos up -d
-[+] Running 11/15
- ⠸ Network bcnetwork                                                     Created          2.3s
- ⠸ Volume "eth-pos-devnet_portainer_data"                                Created          2.3s
- ⠸ Volume "eth-pos-devnet_prom_data"                                     Created          2.3s
- ⠸ Volume "eth-pos-devnet_grafana_storage"                               Created          2.3s
- ✔ Container eth-pos-devnet-lite-explorer-1                              Started          0.6s
- ✔ Container eth-pos-devnet-weavescope-1                                 Started          0.3s
- ✔ Container eth-pos-devnet-grafana-1                                    Started          0.7s
- ✔ Container eth-pos-devnet-portainer-1                                  Started          0.5s
- ✔ Container eth-pos-devnet-prometheus-1                                 Started          0.7s
- ✔ Container eth-pos-devnet-create-beacon-chain-genesis-1                Exited           0.5s
- ! weavescope Published ports are discarded when using host network mode                  0.0s
- ✔ Container eth-pos-devnet-geth-genesis-1                               Exited           1.2s
- ✔ Container eth-pos-devnet-beacon-chain-1                               Started          1.4s
- ✔ Container eth-pos-devnet-validator-1                                  Started          1.6s
- ✔ Container eth-pos-devnet-geth-1                                       Started          2.1s
+```bash
+$ docker compose --profile explorer --profile ether-faucet up -d
+[+] Running 9/9
+ ✔ Container ether-compose-lite-explorer-1                Started                                0.6s 
+ ✔ Container ether-faucet-backend                         St...                                  0.5s 
+ ✔ Container ether-faucet-frontend                        S...                                   0.5s 
+ ✔ Container redis-stack                                  Started                                0.6s 
+ ✔ Container ether-compose-create-beacon-chain-genesis-1  Exited                                 0.9s 
+ ✔ Container geth-genesis-pos                             Exited                                 1.7s 
+ ✔ Container ether-compose-beacon-chain-1                 Started                                1.2s 
+ ✔ Container geth                                         Started                                1.9s 
+ ✔ Container ether-compose-validator-1                    Started                                1.4s
 ```
 
 Each time you restart, you can wipe the old data using `./clean.sh`.
@@ -96,6 +99,14 @@ INFO [08-19|00:44:42.733] Imported new potential chain segment     blocks=1 txs=
 INFO [08-19|00:44:42.747] Chain head was updated                   number=53 hash=ee046e..e56b0c root=815538..801014 elapsed="821.084µs"
 ```
 
+### IMPORTANT NOTES
+Up to the 24th block, no block is finalized, so the following error will be visible in Geth's logs:
+```log
+ERROR[10-27|00:20:21.329] Nil finalized block cannot evict old blobs
+```
+This is an expected error, so don't worry, it will be removed after the 24th block, which will be the first finalized block.
+
+
 ### Configure Prometheus & Grafana
 - Prometheus Grafana configuration: 
 https://grafana.com/grafana/dashboards/18463-go-ethereum-by-instance/
@@ -107,14 +118,9 @@ Delete the blockchain
 sudo ./clean.sh
 ```
 
-Delete the blockchain and all the volumes
-```
-sudo ./clean.sh -f
-```
-
 # Available Features
 
-- Starts from the Capella Ethereum hard fork
+- Starts from the Deneb Ethereum hard fork
 - The network launches with a [Validator Deposit Contract](https://github.com/ethereum/consensus-specs/blob/dev/solidity_deposit_contract/deposit_contract.sol) deployed at address `0x4242424242424242424242424242424242424242`. This can be used to onboard new validators into the network by depositing 32 ETH into the contract
 - The default account used in the go-ethereum node is address `0x123463a4b065722e99115d6c222f267d9cabb524` which comes seeded with ETH for use in the network. This can be used to send transactions, deploy contracts, and more
 - The default account, `0x123463a4b065722e99115d6c222f267d9cabb524` is also set as the fee recipient for transaction fees proposed validators in Prysm. This address will be receiving the fees of all proposer activity
