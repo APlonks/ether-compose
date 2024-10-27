@@ -3,20 +3,13 @@
 
 Reference : https://github.com/OffchainLabs/eth-pos-devnet/tree/master
 
-Geth client: Execution client:
-https://geth.ethereum.org/
+Geth client: Execution client: https://geth.ethereum.org/
 
 Prysm Client: Consensus + Validator: https://docs.prylabs.network/docs/getting-started
 
 Ethreum-lite-explorer: https://github.com/Alethio/ethereum-lite-explorer
 
-Prometheus: https://prometheus.io/
-
-Grafana: https://grafana.com/
-
-Portainer: https://www.portainer.io/
-
-Weave Scope: https://www.weave.works/
+ether-faucet: https://github.com/APlonks/ether-faucet
 
 # Development
 Go Ethereum Book:
@@ -60,3 +53,8 @@ Openethereum
 - https://www.myhsts.org/blockchain.html
 
 - https://openethereum.github.io/
+
+- Prometheus Grafana configuration: 
+https://grafana.com/grafana/dashboards/18463-go-ethereum-by-instance/
+
+- Import data dashboard template in grafana : https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/import-dashboards/

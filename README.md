@@ -83,20 +83,26 @@ Each time you restart, you can wipe the old data using `./clean.sh`.
 Next, you can inspect the logs of the different services launched. 
 
 ```
-docker logs eth-pos-devnet-geth-1 -f
+docker logs geth -f
 ```
 
 and see:
 
 ```
-INFO [08-19|00:44:30.956] Imported new potential chain segment     blocks=1 txs=0 mgas=0.000 elapsed=1.356ms     mgasps=0.000 number=50 hash=e0bd7f..497d27 dirty=0.00B
-INFO [08-19|00:44:31.030] Chain head was updated                   number=50 hash=e0bd7f..497d27 root=815538..801014 elapsed=1.49025ms
-INFO [08-19|00:44:35.215] Imported new potential chain segment     blocks=1 txs=0 mgas=0.000 elapsed=3.243ms     mgasps=0.000 number=51 hash=a5fb7c..5e844b dirty=0.00B
-INFO [08-19|00:44:35.311] Chain head was updated                   number=51 hash=a5fb7c..5e844b root=815538..801014 elapsed=1.73475ms
-INFO [08-19|00:44:39.435] Imported new potential chain segment     blocks=1 txs=0 mgas=0.000 elapsed=1.355ms     mgasps=0.000 number=52 hash=b2fd97..22e230 dirty=0.00B
-INFO [08-19|00:44:39.544] Chain head was updated                   number=52 hash=b2fd97..22e230 root=815538..801014 elapsed=1.167959ms
-INFO [08-19|00:44:42.733] Imported new potential chain segment     blocks=1 txs=0 mgas=0.000 elapsed=2.453ms     mgasps=0.000 number=53 hash=ee046e..e56b0c dirty=0.00B
-INFO [08-19|00:44:42.747] Chain head was updated                   number=53 hash=ee046e..e56b0c root=815538..801014 elapsed="821.084µs"
+INFO [10-27|08:00:31.469] Imported new potential chain segment     number=1 hash=8654d2..2105c7 blocks=1 txs=0 mgas=0.000 elapsed=2.304ms     mgasps=0.000 triedirty=0.00B
+INFO [10-27|08:00:31.552] Chain head was updated                   number=1 hash=8654d2..2105c7 root=cf6120..825bd5 elapsed=2.40845ms
+ERROR[10-27|08:00:31.552] Nil finalized block cannot evict old blobs
+INFO [10-27|08:00:31.555] Indexed transactions                     blocks=2 txs=0 tail=0 elapsed=2.319ms
+INFO [10-27|08:00:31.559] Starting work on payload                 id=0x03f858e7eb51aa3c
+INFO [10-27|08:00:31.559] Updated payload                          id=0x03f858e7eb51aa3c number=2 hash=0df6ea..6e4149 txs=0 withdrawals=0 gas=0 fees=0 root=cf6120..825bd5 elapsed="62.378µs"
+INFO [10-27|08:00:43.269] Stopping work on payload                 id=0x03f858e7eb51aa3c reason=delivery
+INFO [10-27|08:00:43.283] Imported new potential chain segment     number=2 hash=0df6ea..6e4149 blocks=1 txs=0 mgas=0.000 elapsed=2.134ms     mgasps=0.000 triedirty=0.00B
+INFO [10-27|08:00:43.324] Chain head was updated                   number=2 hash=0df6ea..6e4149 root=cf6120..825bd5 elapsed=2.033147ms
+ERROR[10-27|08:00:43.324] Nil finalized block cannot evict old blobs
+INFO [10-27|08:00:43.327] Starting work on payload                 id=0x030e91dc81563803
+INFO [10-27|08:00:43.328] Updated payload                          id=0x030e91dc81563803 number=3 hash=91760b..310628 txs=0 withdrawals=0 gas=0 fees=0 root=cf6120..825bd5 elapsed="74.611µs"
+INFO [10-27|08:00:55.284] Stopping work on payloasd                 id=0x030e91dc81563803 reason=delivery
+INFO [10-27|08:00:55.297] Imported new potential chain segment     number=3 hash=91760b..310628 blocks=1 txs=0 mgas=0.000 elapsed=2.026ms     mgasps=0.000 triedirty=0.00B
 ```
 
 ### IMPORTANT NOTES
@@ -106,11 +112,6 @@ ERROR[10-27|00:20:21.329] Nil finalized block cannot evict old blobs
 ```
 This is an expected error, so don't worry, it will be removed after the 24th block, which will be the first finalized block.
 
-
-### Configure Prometheus & Grafana
-- Prometheus Grafana configuration: 
-https://grafana.com/grafana/dashboards/18463-go-ethereum-by-instance/
-- Import data dashboard template in grafana : https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/import-dashboards/
 
 ### Blockchain removal
 Delete the blockchain 
@@ -131,42 +132,38 @@ sudo ./clean.sh
 # Listening Ports
 
 ### Ethereum execution client go: **GETH**
-|Ports|Process|
-|:--|:--|
-|8545|HTTP endpoint|
-|8546|Websocket endpoint|
-|8551|Authentication port for the consensus client|
-|6060|Metrics Port|
+| Ports | Process                                      |
+| :---- | :------------------------------------------- |
+| 8545  | HTTP endpoint                                |
+| 8546  | Websocket endpoint                           |
+| 8551  | Authentication port for the consensus client |
+| 6060  | Metrics Port                                 |
 
-### Ethereum consensus client: **Prysm** (exists only in POS)
+### Ethereum consensus client: **Prysm**
 ref : https://docs.prylabs.network/docs/prysm-usage/p2p-host-ip
-|Ports|Process|
-|:--|:--|
-|4000|Port to let the validator access to the consensus using gRPC|
-|3500|JSON-RPC for API|
+| Ports | Process                                                      |
+| :---- | :----------------------------------------------------------- |
+| 4000  | Port to let the validator access to the consensus using gRPC |
+| 3500  | JSON-RPC for API                                             |
 
 
-### Ethereum consensus client: **Validator** (exists only in POS)
-|Ports|Process|
-|:--|:--|
+### Ethereum consensus client: **Validator**
+| Ports | Process |
+| :---- | :------ |
 
 
 ### Block explorer: **Ethereum lite-explorer**
-|Ports|Process|
-|:--|:--|
-|8081|Web Server|
+| Ports | Process    |
+| :---- | :--------- |
+| 8081  | Web Server |
 
-### Metrcis Collector: **Prometheus**
-|Ports|Process|
-|:--|:--|
-|9090|WebServer & endpoint for grafana|
+### Faucet: **ether-faucet**
+| Ports | Process                |
+| :---- | :--------------------- |
+| 5001  | Frontend web interface |
+| 5002  | Backend API            |
+| 8001  | Redis web interface    |
 
-### Graph & Stats on metrics: **Grafana**
-|Ports|Process|
-|:--|:--|
-|3000|WebServer|
+For ether-faucet, the configuration to enable the frontend to access the ether-faucet API is carried out on the web interface. 
 
-### Containers/process visualisation: **weaveworks**
-|Ports|Process|
-|:--|:--|
-|4040|WebServer|
+For more information, see : [ether-faucet by APlonks](https://github.com/APlonks/ether-faucet)
