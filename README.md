@@ -1,7 +1,21 @@
 ![](/images/Image_README_ether-compose.png)
 Project based on https://github.com/OffchainLabs/eth-pos-devnet/tree/master
 
-# Ethereum Proof-of-Stake Devnet
+# 1. Ethereum Proof-of-Stake Devnet
+
+- [1. Ethereum Proof-of-Stake Devnet](#1-ethereum-proof-of-stake-devnet)
+  - [1.1. Minimum prerequisites:](#11-minimum-prerequisites)
+  - [1.2. Installation](#12-installation)
+  - [1.3. IMPORTANT NOTES](#13-important-notes)
+  - [1.4. Blockchain removal](#14-blockchain-removal)
+- [2. Available Features](#2-available-features)
+- [3. Listening Ports](#3-listening-ports)
+  - [3.1. Ethereum execution client go: **GETH**](#31-ethereum-execution-client-go-geth)
+  - [3.2. Ethereum consensus client: **Prysm**](#32-ethereum-consensus-client-prysm)
+  - [3.3. Ethereum consensus client: **Validator**](#33-ethereum-consensus-client-validator)
+  - [3.4. Block explorer: **Ethereum lite-explorer**](#34-block-explorer-ethereum-lite-explorer)
+  - [3.5. Faucet: **ether-faucet**](#35-faucet-ether-faucet)
+
 
 This repository provides a docker-compose file to run a fully-functional, local development network for Ethereum with proof-of-stake enabled. This configuration uses [Prysm](https://github.com/prysmaticlabs/prysm) as a consensus client and [go-ethereum](https://github.com/ethereum/go-ethereum) for execution. **It starts from proof-of-stake** and does not go through the Ethereum merge.
 
@@ -12,9 +26,7 @@ This sets up a single node development network with 64 deterministically-generat
 
 The development net is fully functional and allows for the deployment of smart contracts and all the features that also come with the Prysm consensus client such as its rich set of APIs for retrieving data from the blockchain. This development net is a great way to understand the internals of Ethereum proof-of-stake and to mess around with the different settings that make the system possible.
 
-## Installation Blockchain
-
-### Minimum prerequisites:
+## 1.1. Minimum prerequisites:
 
 Materials:
 - 2 CPU cores
@@ -23,7 +35,7 @@ Materials:
 Software:
 - Install Docker (recommended version latest) : [Install Docker Engine](https://docs.docker.com/engine/install/)
 
-### Installation
+## 1.2. Installation
 
 Clone the project
 ```
@@ -106,7 +118,7 @@ INFO [10-27|08:00:55.284] Stopping work on payloasd                 id=0x030e91d
 INFO [10-27|08:00:55.297] Imported new potential chain segment     number=3 hash=91760b..310628 blocks=1 txs=0 mgas=0.000 elapsed=2.026ms     mgasps=0.000 triedirty=0.00B
 ```
 
-### IMPORTANT NOTES
+## 1.3. IMPORTANT NOTES
 Up to the 24th block, no block is finalized, so the following error will be visible in Geth's logs:
 ```log
 ERROR[10-27|00:20:21.329] Nil finalized block cannot evict old blobs
@@ -114,13 +126,13 @@ ERROR[10-27|00:20:21.329] Nil finalized block cannot evict old blobs
 This is an expected error, so don't worry, it will be removed after the 24th block, which will be the first finalized block.
 
 
-### Blockchain removal
+## 1.4. Blockchain removal
 Delete the blockchain 
 ```
 sudo ./clean.sh
 ```
 
-# Available Features
+# 2. Available Features
 
 - Starts from the Deneb Ethereum hard fork
 - The network launches with a [Validator Deposit Contract](https://github.com/ethereum/consensus-specs/blob/dev/solidity_deposit_contract/deposit_contract.sol) deployed at address `0x4242424242424242424242424242424242424242`. This can be used to onboard new validators into the network by depositing 32 ETH into the contract
@@ -130,9 +142,9 @@ sudo ./clean.sh
 - The Prysm client's REST APIs are available at http://beacon-chain:3500. For more info on what these APIs are, see [here](https://ethereum.github.io/beacon-APIs/)
 - The Prysm client also exposes a gRPC API at http://beacon-chain:4000
 
-# Listening Ports
+# 3. Listening Ports
 
-### Ethereum execution client go: **GETH**
+## 3.1. Ethereum execution client go: **GETH**
 | Ports | Process                                      |
 | :---- | :------------------------------------------- |
 | 8545  | HTTP endpoint                                |
@@ -140,7 +152,7 @@ sudo ./clean.sh
 | 8551  | Authentication port for the consensus client |
 | 6060  | Metrics Port                                 |
 
-### Ethereum consensus client: **Prysm**
+## 3.2. Ethereum consensus client: **Prysm**
 ref : https://docs.prylabs.network/docs/prysm-usage/p2p-host-ip
 | Ports | Process                                                      |
 | :---- | :----------------------------------------------------------- |
@@ -148,17 +160,17 @@ ref : https://docs.prylabs.network/docs/prysm-usage/p2p-host-ip
 | 3500  | JSON-RPC for API                                             |
 
 
-### Ethereum consensus client: **Validator**
+## 3.3. Ethereum consensus client: **Validator**
 | Ports | Process |
 | :---- | :------ |
 
 
-### Block explorer: **Ethereum lite-explorer**
+## 3.4. Block explorer: **Ethereum lite-explorer**
 | Ports | Process    |
 | :---- | :--------- |
 | 8081  | Web Server |
 
-### Faucet: **ether-faucet**
+## 3.5. Faucet: **ether-faucet**
 | Ports | Process                |
 | :---- | :--------------------- |
 | 5001  | Frontend web interface |
