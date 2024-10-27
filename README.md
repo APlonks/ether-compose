@@ -1,3 +1,4 @@
+![](/images/Image_README_ether-compose.png)
 Project based on https://github.com/OffchainLabs/eth-pos-devnet/tree/master
 
 # Ethereum Proof-of-Stake Devnet
